@@ -25,12 +25,13 @@ let errorCount = 0;
 for (let key in apiResponse) {
     let value = apiResponse[key];
     let isEmpty = value === null || value === "";
-    let isWrongType = key === "isActive" && typeof value !== "boolean";
+    
     if (isEmpty) {
         console.warn(`Cảnh báo: Trường "${key}" rỗng.`);
         errorCount++;
     }
 
+    let isWrongType = key === "isActive" && typeof value !== "boolean";
     if (isWrongType) {
         console.warn(`Cảnh báo: Trường "${key}" sai kiểu dữ liệu.`);
         errorCount++;
@@ -57,3 +58,21 @@ let testUrls = [
 // Nếu status === 500 → in lỗi nghiêm trọng, dùng break dừng ngay.
 // Nếu bình thường → in kết quả PASS.
 // Đếm tổng URL đã test được (không tính URL bị bỏ qua)."
+let testedCount = 0;
+for (let i = 0; i < testUrls.length; i++) {
+    let { url, status } = testUrls[i];
+    if (url === "") {
+        console.warn("Cảnh báo: URL rỗng.");
+        continue;
+    }
+
+    if (status === 500) {
+        console.error("Lỗi nghiêm trọng: Server trả về lỗi 500.");
+        break;
+    }
+
+    console.log(`PASS: ${url}`);
+    testedCount++;
+}
+
+console.log(`Tổng số URL đã test được: ${testedCount}`);
